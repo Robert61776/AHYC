@@ -309,7 +309,7 @@ moorSel.appendChild(ph);
 MOORINGS.forEach(m => {
   const o = document.createElement('option');
   o.value = m.id;
-  o.textContent = m.boat ? m.id + ' — ' + m.boat : m.id;
+  o.textContent = m.boat ? m.id + m.boat : m.id;
   moorSel.appendChild(o);
 });
 for (let i = 1; i <= 14; i++) {
