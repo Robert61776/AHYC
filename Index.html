@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="AHYC Launch">
+<title>AHYC Launch Log</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+    background: #f2f2f7;
+    color: #1c1c1e;
+    min-height: 100vh;
+  }
+  header {
+    background: #fff;
+    border-bottom: 0.5px solid rgba(0,0,0,0.15);
+    padding: 16px 20px 12px;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+  header h1 { font-size: 20px; font-weight: 600; }
+  header p { font-size: 13px; color: #6e6e73; margin-top: 2px; }
+  .tab-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    background: #fff;
+    border-bottom: 0.5px solid rgba(0,0,0,0.15);
+  }
+  .tab-btn {
+    background: transparent;
+    border: none;
+    padding: 12px;
+    font-size: 15px;
+    color: #6e6e73;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    font-family: inherit;
+  }
+  .tab-btn.active {
+    color: #007aff;
+    border-bottom-color: #007aff;
+    font-weight: 500;
+  }
+  .pane { padding: 20px 16px; max-width: 500px; margin: 0 auto; }
+  .field-label {
+    font-size: 12px;
+    color: #6e6e73;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin: 0 0 6px 4px;
+  }
+  select {
+    width: 100%;
+    font-size: 16px;
+    padding: 12px 14px;
+    background: #fff;
+    border: 0.5px solid rgba(0,0,0,0.2);
+    border-radius: 10px;
+    color: #1c1c1e;
+    margin-bottom: 16px;
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23999' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    font-family: inherit;
+  }
+  select:focus { outline: none; border-color: #007aff; box-shadow: 0 0 0 3px rgba(0,122,255,0.15); }
+  .log-btn {
+    width: 100%;
+    background: #007aff;
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    padding: 14px;
+    font-size: 17px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+    margin-top: 4px;
+  }
+  .log-btn:active { background: #0062cc; transform: scale(0.98); }
+  .divider { border: none; border-top: 0.5px solid rgba(0,0,0,0.12); margin: 24px 0; }
+  .section-head { font-size: 13px; font-weight: 600; color: #6e6e73; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 10px; }
+  .ride-card {
+    background: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 0.5px solid rgba(0,0,0,0.1);
+  }
+  .ride-entry {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 14px;
+    border-bottom: 0.5px solid rgba(0,0,0,0.08);
+  }
+  .ride-entry:last-child { border-bottom: none; }
+  .ride-label { font-size: 15px; font-weight: 500; }
+  .ride-sub { font-size: 13px; color: #6e6e73; margin-top: 1px; }
+  .ride-right { display: flex; align-items: center; gap: 12px; }
+  .ride-time { font-size: 13px; color: #6e6e73; }
+  .delete-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #ff3b30;
+    font-size: 20px;
+    line-height: 1;
+    padding: 2px 4px;
+  }
+  .empty { text-align: center; color: #6e6e73; font-size: 15px; padding: 24px 0; }
+  .stats-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+  .stat-card { background: #fff; border-radius: 12px; padding: 14px 16px; border: 0.5px solid rgba(0,0,0,0.1); }
+  .stat-label { font-size: 12px; color: #6e6e73; text-transform: uppercase; letter-spacing: 0.05em; }
+  .stat-val { font-size: 28px; font-weight: 600; color: #1c1c1e; margin-top: 2px; }
+  .hour-block { margin-bottom: 16px; }
+  .hour-header {
+    font-size: 12px;
+    font-weight: 600;
+    color: #6e6e73;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 6px;
+    padding: 4px 10px;
+    background: rgba(0,0,0,0.04);
+    border-radius: 6px;
+    display: inline-block;
+  }
+  .summary-card { background: #fff; border-radius: 10px; border: 0.5px solid rgba(0,0,0,0.1); overflow: hidden; }
+  .summary-line { padding: 10px 14px; font-size: 16px; font-weight: 500; border-bottom: 0.5px solid rgba(0,0,0,0.06); }
+  .summary-line:last-child { border-bottom: none; }
+  .reset-btn {
+    width: 100%;
+    background: transparent;
+    color: #ff3b30;
+    border: 0.5px solid #ff3b30;
+    border-radius: 12px;
+    padding: 13px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: inherit;
+    margin-top: 24px;
+  }
+  .reset-btn:active { background: rgba(255,59,48,0.06); }
+  .toast {
+    position: fixed;
+    bottom: 32px;
+    left: 50%;
+    transform: translateX(-50%) translateY(80px);
+    background: rgba(28,28,30,0.88);
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 20px;
+    font-size: 15px;
+    font-weight: 500;
+    transition: transform 0.3s ease;
+    pointer-events: none;
+    white-space: nowrap;
+    z-index: 100;
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+  .confirm-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.4);
+    z-index: 200;
+    align-items: flex-end;
+    justify-content: center;
+  }
+  .confirm-overlay.show { display: flex; }
+  .confirm-sheet {
+    background: #fff;
+    border-radius: 16px 16px 0 0;
+    padding: 20px 20px 36px;
+    width: 100%;
+    max-width: 500px;
+  }
+  .confirm-msg { font-size: 16px; font-weight: 500; margin-bottom: 16px; text-align: center; }
+  .confirm-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .confirm-cancel { background: #e5e5ea; color: #1c1c1e; border: none; border-radius: 10px; padding: 13px; font-size: 16px; font-family: inherit; cursor: pointer; }
+  .confirm-ok { background: #ff3b30; color: #fff; border: none; border-radius: 10px; padding: 13px; font-size: 16px; font-weight: 600; font-family: inherit; cursor: pointer; }
+  @media (prefers-color-scheme: dark) {
+    .confirm-sheet { background: #2c2c2e; }
+    .confirm-msg { color: #f2f2f7; }
+    .confirm-cancel { background: #3a3a3c; color: #f2f2f7; }
+  }
+  @media (prefers-color-scheme: dark) {
+    body { background: #1c1c1e; color: #f2f2f7; }
+    header { background: #2c2c2e; border-color: rgba(255,255,255,0.12); }
+    header p { color: #aeaeb2; }
+    .tab-row { background: #2c2c2e; border-color: rgba(255,255,255,0.1); }
+    .tab-btn { color: #aeaeb2; }
+    select { background-color: #2c2c2e; border-color: rgba(255,255,255,0.15); color: #f2f2f7; }
+    .ride-card, .stat-card, .summary-card { background: #2c2c2e; border-color: rgba(255,255,255,0.1); }
+    .ride-entry { border-color: rgba(255,255,255,0.07); }
+    .ride-sub, .ride-time { color: #aeaeb2; }
+    .stat-label { color: #aeaeb2; }
+    .stat-val { color: #f2f2f7; }
+    .summary-line { border-color: rgba(255,255,255,0.07); }
+    .hour-header { background: rgba(255,255,255,0.07); color: #aeaeb2; }
+    .section-head { color: #aeaeb2; }
+    .field-label { color: #aeaeb2; }
+    .empty { color: #aeaeb2; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>AHYC Launch Log</h1>
+  <p>Atlantic Highlands Harbor</p>
+</header>
+
+<div class="tab-row">
+  <button class="tab-btn active" id="tab-log" onclick="showTab('log')">Log Ride</button>
+  <button class="tab-btn" id="tab-summary" onclick="showTab('summary')">End of Shift</button>
+</div>
+
+<div id="pane-log" class="pane">
+  <p class="field-label">Mooring</p>
+  <select id="mooring-select"></select>
+
+  <p class="field-label">Passengers</p>
+  <select id="pax-select">
+    <option value="">— select # —</option>
+  </select>
+
+  <button class="log-btn" onclick="logRide()">Log Ride</button>
+
+  <hr class="divider">
+
+  <p class="section-head">This Shift</p>
+  <div id="ride-list"><p class="empty">No rides logged yet</p></div>
+</div>
+
+<div id="pane-summary" class="pane" style="display:none;">
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-label">Total Rides</div>
+      <div class="stat-val" id="total-rides">0</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Total Pax</div>
+      <div class="stat-val" id="total-pax">0</div>
+    </div>
+  </div>
+  <p class="section-head">Rides by Hour</p>
+  <div id="summary-list"><p class="empty">No rides logged</p></div>
+  <button class="reset-btn" onclick="resetShift()">&#8635; Reset for New Shift</button>
+</div>
+
+<div class="confirm-overlay" id="confirm-overlay">
+  <div class="confirm-sheet">
+    <div class="confirm-msg" id="confirm-msg"></div>
+    <div class="confirm-btns">
+      <button class="confirm-cancel" onclick="confirmResolve(false)">Cancel</button>
+      <button class="confirm-ok" id="confirm-ok-btn" onclick="confirmResolve(true)">Remove</button>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+const MOORINGS = [
+  {id:"C-1",boat:"109"},{id:"C-2",boat:""},{id:"C-3",boat:""},{id:"C-4",boat:""},
+  {id:"D-1",boat:"At Last"},{id:"D-2",boat:"Liberty 2"},{id:"D-3",boat:"I Knot Know"},{id:"D-4",boat:"Willow"},{id:"D-5",boat:""},
+  {id:"E-1",boat:"Lucky Girl"},{id:"E-2",boat:"Serendipity"},{id:"E-3",boat:"Summer Breeze"},{id:"E-4",boat:""},{id:"E-5",boat:"Hanna Lee"},
+  {id:"F-1",boat:"Nepenthe"},{id:"F-2",boat:"Evenstar"},{id:"F-3",boat:"Nice Things"},{id:"F-4",boat:"Wave Dancer"},{id:"F-5",boat:"Sea Smoke"},{id:"F-6",boat:"Social Distance"},
+  {id:"G-1",boat:"Nepenthe"},{id:"G-2",boat:"Bella Luna"},{id:"G-3",boat:"Phoenix"},{id:"G-4",boat:"Christina Lee"},{id:"G-5",boat:"Toro"},{id:"G-6",boat:"Fuel Dock"},
+  {id:"H-1",boat:"As You Wish"},{id:"H-2",boat:"Vici"},{id:"H-3",boat:"Felicity"},{id:"H-4",boat:"Radient 3"},{id:"H-5",boat:"Christal"},{id:"H-6",boat:"Panasea"},{id:"H-7",boat:""},
+  {id:"I-1",boat:"Jazz"},{id:"I-2",boat:"Naia"},{id:"I-3",boat:"Maganda"},{id:"I-4",boat:"Cielo Blu"},{id:"I-5",boat:"Time"},{id:"I-6",boat:"Inverness"},{id:"I-7",boat:"Confiscated"},
+  {id:"J-1",boat:"Cosmo"},{id:"J-2",boat:"David Lee"},{id:"J-3",boat:"Diva"},{id:"J-4",boat:"Sole Mate"},{id:"J-5",boat:"Akorn"},{id:"J-6",boat:""},{id:"J-7",boat:"Maple Sugar"},
+  {id:"K-1",boat:"Soft Rocker"},{id:"K-2",boat:"Madua"},{id:"K-3",boat:"Makai"},{id:"K-4",boat:"Tahani"},{id:"K-5",boat:"Vivacious 2"},{id:"K-6",boat:"Easterly"},{id:"K-7",boat:"Dr Jazz"},
+  {id:"L-1",boat:"Rock Steady"},{id:"L-2",boat:"Earth Angel"},{id:"L-3",boat:"Ruffian"},{id:"L-4",boat:"Sea Goddess"},{id:"L-5",boat:"Marjorie Mo"},{id:"L-6",boat:"Big Sandwich"},{id:"L-7",boat:"Asylum"},
+  {id:"M-1",boat:"Salty Treasure"},{id:"M-2",boat:"Monterey"},{id:"M-3",boat:"Avanti"},{id:"M-4",boat:"Seranata"},{id:"M-5",boat:"Jacqueline"},{id:"M-6",boat:"Aloha Spirit"},{id:"M-7",boat:"Trident"},
+  {id:"N-1",boat:"Dexterity"},{id:"N-2",boat:"Spirit"},{id:"N-3",boat:"Blue Point"},{id:"N-4",boat:"Lattitude"},{id:"N-5",boat:"Wind Catcher"},{id:"N-6",boat:"Amazing Grace"},{id:"N-7",boat:"Key Largo"},
+  {id:"O-1",boat:"Mad Dog"},{id:"O-2",boat:"Endless Summer"},{id:"O-3",boat:"True North"},{id:"O-4",boat:"Hamish"},{id:"O-5",boat:"Puff"},{id:"O-6",boat:""},
+  {id:"P-1",boat:"Corsair"},{id:"P-2",boat:"Duet"},{id:"P-3",boat:"Caria"},{id:"P-4",boat:"Aki"},{id:"P-5",boat:"Vici"},{id:"P-6",boat:"Juniper"},
+  {id:"R-1",boat:"La Kokopel"},{id:"R-2",boat:"Gemini"},{id:"R-3",boat:"Aviato"},{id:"R-4",boat:"Fortunette"},{id:"R-5",boat:"Long Tail"},{id:"R-6",boat:"Sea Owl"},
+  {id:"S-1",boat:"Amazing Grace"},{id:"S-2",boat:"Sail Goin"},{id:"S-3",boat:"Malunna"},{id:"S-4",boat:"Kai"},{id:"S-5",boat:"Pelican"},{id:"S-6",boat:"Sea Fever"},
+  {id:"T-1",boat:"Mer Seas"},{id:"T-2",boat:"Picture Perfect"},{id:"T-3",boat:"St Circumstance"},{id:"T-4",boat:"Life at Sea"},{id:"T-5",boat:"Overlap"},{id:"T-6",boat:"Samuri"},
+  {id:"U-1",boat:"Plot Twist"},{id:"U-2",boat:"Ciao Baby"},{id:"U-3",boat:"Naia"},{id:"U-4",boat:"Anam Caras 4th"},{id:"U-5",boat:"Dram"},{id:"U-6",boat:"Trouble Maker"},
+  {id:"V-1",boat:"Great Am"},{id:"V-2",boat:"Nude"},{id:"V-3",boat:"Serenity"},{id:"V-4",boat:"3rd Encounter"},{id:"V-5",boat:"Euphoria"},{id:"V-6",boat:"Seaquester"},
+  {id:"W-1",boat:"Elixir"},{id:"W-2",boat:"Blue Star"},{id:"W-3",boat:"Summer Wind"},{id:"W-4",boat:"Helen Rita"},{id:"W-5",boat:"Vincere"},{id:"W-6",boat:""},
+  {id:"X-1",boat:"Irish Rover"},{id:"X-2",boat:"Elixir"},{id:"X-3",boat:"Sole Mate"},{id:"X-4",boat:"Voyager"},{id:"X-5",boat:""},{id:"X-6",boat:""},
+  {id:"Y-1",boat:"Anam Caras"},{id:"Y-2",boat:"Simpatico"},{id:"Y-3",boat:"Arete"},{id:"Y-4",boat:"Draco"},{id:"Y-5",boat:""},{id:"Y-6",boat:""},
+  {id:"Z-1",boat:"Sunrise"},{id:"Z-2",boat:"Ocean Rebel"},{id:"Z-3",boat:"Honey Badger"},{id:"Z-4",boat:"Sea Suite"},{id:"Z-5",boat:""},
+  {id:"ZZ-1",boat:"Pau Hanna"},{id:"ZZ-2",boat:"Impanema"},{id:"ZZ-3",boat:"Assarain IV"},{id:"ZZ-4",boat:"Keburmain"},{id:"ZZ-5",boat:""}
+];
+
+let rides = [];
+try { rides = JSON.parse(localStorage.getItem('ahyc_rides_v2') || '[]'); } catch(e){ rides=[]; }
+function save() { try { localStorage.setItem('ahyc_rides_v2', JSON.stringify(rides)); } catch(e){} }
+
+const moorSel = document.getElementById('mooring-select');
+const paxSel = document.getElementById('pax-select');
+
+const ph = document.createElement('option');
+ph.value = ''; ph.textContent = '— select mooring —';
+moorSel.appendChild(ph);
+MOORINGS.forEach(m => {
+  const o = document.createElement('option');
+  o.value = m.id;
+  o.textContent = m.boat ? m.id + ' — ' + m.boat : m.id;
+  moorSel.appendChild(o);
+});
+for (let i = 1; i <= 14; i++) {
+  const o = document.createElement('option');
+  o.value = i; o.textContent = i + (i === 1 ? ' passenger' : ' passengers');
+  paxSel.appendChild(o);
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2000);
+}
+
+let _confirmCallback = null;
+function showConfirm(msg, okLabel, cb) {
+  document.getElementById('confirm-msg').textContent = msg;
+  document.getElementById('confirm-ok-btn').textContent = okLabel;
+  document.getElementById('confirm-overlay').classList.add('show');
+  _confirmCallback = cb;
+}
+function confirmResolve(ok) {
+  document.getElementById('confirm-overlay').classList.remove('show');
+  if (ok && _confirmCallback) _confirmCallback();
+  _confirmCallback = null;
+}
+
+function logRide() {
+  const mooring = moorSel.value;
+  const pax = parseInt(paxSel.value);
+  if (!mooring || !pax) { showToast('Select a mooring and passenger count'); return; }
+  rides.push({ mooring, pax, ts: new Date().toISOString() });
+  save();
+  moorSel.value = '';
+  paxSel.value = '';
+  renderRideList();
+  showToast(mooring + ' \u00d7 ' + pax + ' logged');
+}
+
+function deleteRide(idx) {
+  showConfirm('Remove this ride?', 'Remove', () => {
+    rides.splice(idx, 1);
+    save();
+    renderRideList();
+    renderSummary();
+    showToast('Ride removed');
+  });
+}
+
+function formatTime(iso) {
+  const d = new Date(iso);
+  return d.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit', hour12:false});
+}
+
+function hourKey(iso) {
+  const d = new Date(iso);
+  const h = d.getHours();
+  const pad = n => String(n).padStart(2,'0');
+  return pad(h) + ':00\u2013' + pad(h === 23 ? 0 : h+1) + ':00';
+}
+
+function boatName(id) {
+  const m = MOORINGS.find(x => x.id === id);
+  return m && m.boat ? m.boat : '';
+}
+
+function renderRideList() {
+  const el = document.getElementById('ride-list');
+  if (rides.length === 0) { el.innerHTML = '<p class="empty">No rides logged yet</p>'; return; }
+  el.innerHTML = '<div class="ride-card">' + [...rides].map((r, i) => {
+    const boat = boatName(r.mooring);
+    return `<div class="ride-entry">
+      <div>
+        <div class="ride-label">${r.mooring}${boat ? ' \u2014 ' + boat : ''}</div>
+        <div class="ride-sub">${r.pax} passenger${r.pax > 1 ? 's' : ''}</div>
+      </div>
+      <div class="ride-right">
+        <span class="ride-time">${formatTime(r.ts)}</span>
+        <button class="delete-btn" data-idx="${i}" aria-label="Delete ride">&times;</button>
+      </div>
+    </div>`;
+  }).reverse().join('') + '</div>';
+
+  document.getElementById('ride-list').querySelectorAll('.delete-btn').forEach(btn => {
+    btn.addEventListener('click', () => deleteRide(parseInt(btn.dataset.idx)));
+  });
+}
+
+function renderSummary() {
+  document.getElementById('total-rides').textContent = rides.length;
+  document.getElementById('total-pax').textContent = rides.reduce((s,r) => s + r.pax, 0);
+  const el = document.getElementById('summary-list');
+  if (rides.length === 0) { el.innerHTML = '<p class="empty">No rides logged</p>'; return; }
+  const groups = {};
+  rides.forEach(r => {
+    const k = hourKey(r.ts);
+    if (!groups[k]) groups[k] = [];
+    groups[k].push(r);
+  });
+  el.innerHTML = Object.keys(groups).sort().map(k => `
+    <div class="hour-block">
+      <div class="hour-header">${k}</div>
+      <div class="summary-card">${groups[k].map(r => `<div class="summary-line">${r.mooring} x ${r.pax}</div>`).join('')}</div>
+    </div>`).join('');
+}
+
+function showTab(tab) {
+  document.getElementById('pane-log').style.display = tab === 'log' ? '' : 'none';
+  document.getElementById('pane-summary').style.display = tab === 'summary' ? '' : 'none';
+  document.getElementById('tab-log').classList.toggle('active', tab === 'log');
+  document.getElementById('tab-summary').classList.toggle('active', tab === 'summary');
+  if (tab === 'summary') renderSummary();
+}
+
+function resetShift() {
+  showConfirm('Clear all rides and start a new shift?', 'Reset', () => {
+    rides = []; save(); renderRideList(); renderSummary();
+    showTab('log');
+    showToast('Shift reset');
+  });
+}
+
+renderRideList();
+</script>
+</body>
+</html>
