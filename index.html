@@ -185,13 +185,15 @@ const NOT_SUB = new Set([
   "C-3","C-4","E-2","E-4","E-5","F-2","G-2","G-3","H-1","H-4","H-5",
   "I-2","I-3","I-5","J-1","J-2","J-5","J-6","K-2","K-4","K-6",
   "L-1","L-5","M-7","N-2","N-4","O-1","O-2","O-6","P-1","P-6",
-  "R-1","S-1","S-5","S-6","T-2","T-5","T-6","U-2","U-3","U-4",
-  "V-1","V-3","V-5","W-1","W-2","X-1","X-2","X-6","Y-1","Y-3","Z-1","Z-2"
+  "R-1","S-1","S-5","S-6","T-2","T-5","T-6","U-2","U-3","U-4","U-5","U-6",
+  "V-1","V-3","V-5","W-1","W-2","X-1","X-2","X-6","Y-1","Y-3","Y-6","Z-1","Z-2",
+  "RF-2","RF-3","RF-4","RF-5","RF-6","RF-7","RF-8","RF-9","RF-10","RF-11","RF-12","RF-13",
+  "AA-1","AA-2","AA-3","AA-4","AA-5","AA-6","AA-7","AA-8","AA-9","AA-12"
 ]);
 
 const MOORINGS = [
-  {id:"C-1",boat:"Social Distance"},{id:"C-2",boat:"Lady P"},{id:"C-3",boat:""},{id:"C-4",boat:""},
-  {id:"D-1",boat:"At Last"},{id:"D-2",boat:"Meridian"},{id:"D-3",boat:"I Knot Know"},{id:"D-4",boat:""},{id:"D-5",boat:"Willow"},
+  {id:"C-2",boat:"Lady P"},{id:"C-3",boat:""},{id:"C-4",boat:""},
+  {id:"D-1",boat:"At Last"},{id:"D-2",boat:"Meridian"},{id:"D-3",boat:"I Knot Know"},{id:"D-4",boat:"New Member"},{id:"D-5",boat:"Willow"},
   {id:"E-1",boat:"Lucky Girl"},{id:"E-2",boat:""},{id:"E-3",boat:"Summer Breeze"},{id:"E-4",boat:""},{id:"E-5",boat:"Hanna Lee"},
   {id:"F-1",boat:"Nepenthe"},{id:"F-2",boat:"Evenstar"},{id:"F-3",boat:"Nice Things"},{id:"F-4",boat:"Wave Dancer"},{id:"F-5",boat:"Sea Smoke"},{id:"F-6",boat:"Social Distance"},
   {id:"G-1",boat:"Nepenthe"},{id:"G-2",boat:""},{id:"G-3",boat:""},{id:"G-4",boat:"Phoenix"},{id:"G-5",boat:"Christina Lee"},{id:"G-6",boat:"Toro"},
@@ -199,7 +201,7 @@ const MOORINGS = [
   {id:"I-1",boat:"Jazz"},{id:"I-2",boat:""},{id:"I-3",boat:"Maganda"},{id:"I-4",boat:"Cielo Blu"},{id:"I-5",boat:""},{id:"I-6",boat:"Inverness"},{id:"I-7",boat:"Confiscated"},
   {id:"J-1",boat:""},{id:"J-2",boat:""},{id:"J-3",boat:"Cosmo"},{id:"J-4",boat:"David Lee"},{id:"J-5",boat:"Diva"},{id:"J-6",boat:"Sole Mate"},{id:"J-7",boat:"Akorn"},
   {id:"K-1",boat:"Soft Rocker"},{id:"K-2",boat:"Madua Makai"},{id:"K-3",boat:"Tahani"},{id:"K-4",boat:"Vivacious 2"},{id:"K-5",boat:"Easterly"},{id:"K-6",boat:""},{id:"K-7",boat:"Dr Jazz"},
-  {id:"L-1",boat:"Rock Steady"},{id:"L-2",boat:"Earth Angel"},{id:"L-3",boat:"Trident"},{id:"L-4",boat:"Sea Goddess"},{id:"L-5",boat:""},{id:"L-6",boat:"Marjorie Morse"},{id:"L-7",boat:"Big Sandwich"},
+  {id:"L-1",boat:"Rock Steady"},{id:"L-2",boat:"Earth Angel"},{id:"L-3",boat:"Trident"},{id:"L-4",boat:"Sea Goddess"},{id:"L-5",boat:""},{id:"L-6",boat:"Marjorie Morse"},{id:"L-7",boat:"#Big Sandwich"},
   {id:"M-1",boat:"Salty Treasure"},{id:"M-2",boat:"Monterey"},{id:"M-3",boat:"Juniper"},{id:"M-4",boat:"Seranata"},{id:"M-5",boat:"Jacqueline"},{id:"M-6",boat:"Aloha Spirit"},{id:"M-7",boat:""},
   {id:"N-1",boat:"Dexterity"},{id:"N-2",boat:""},{id:"N-3",boat:"Spirit"},{id:"N-4",boat:"Blue Point"},{id:"N-5",boat:"Latitude"},{id:"N-6",boat:"Night Heron"},{id:"N-7",boat:"Saltaire"},
   {id:"O-1",boat:""},{id:"O-2",boat:""},{id:"O-3",boat:"Endless Summer"},{id:"O-4",boat:"True North"},{id:"O-5",boat:"Hamish"},{id:"O-6",boat:""},
@@ -207,13 +209,18 @@ const MOORINGS = [
   {id:"R-1",boat:""},{id:"R-2",boat:"La Kokopel"},{id:"R-3",boat:"Gemini"},{id:"R-4",boat:"Aviato"},{id:"R-5",boat:"Fortunette"},{id:"R-6",boat:"Long Tail"},
   {id:"S-1",boat:"Amazing Grace"},{id:"S-2",boat:"Sail Goin"},{id:"S-3",boat:"Maluna Kai"},{id:"S-4",boat:"Resilience"},{id:"S-5",boat:""},{id:"S-6",boat:""},
   {id:"T-1",boat:"Mer Seas"},{id:"T-2",boat:""},{id:"T-3",boat:"St Circumstance"},{id:"T-4",boat:"Life at Sea"},{id:"T-5",boat:""},{id:"T-6",boat:"Overlap"},
-  {id:"U-1",boat:"Plot Twist"},{id:"U-2",boat:""},{id:"U-3",boat:""},{id:"U-4",boat:"Anam Caras"},{id:"U-5",boat:"4th Dram"},{id:"U-6",boat:"Trouble Maker"},
-  {id:"V-1",boat:"Great Am Nude"},{id:"V-2",boat:"Serenity"},{id:"V-3",boat:"3rd Encounter"},{id:"V-4",boat:"Euphoria"},{id:"V-5",boat:""},{id:"V-6",boat:"Sail la Vie"},
+  {id:"U-1",boat:"Plot Twist"},{id:"U-2",boat:""},{id:"U-3",boat:""},{id:"U-4",boat:"Anam Caras"},{id:"U-5",boat:""},{id:"U-6",boat:""},
+  {id:"V-1",boat:""},{id:"V-2",boat:"Great Am Nude"},{id:"V-3",boat:"Serenity"},{id:"V-4",boat:"3rd Encounter"},{id:"V-5",boat:"Euphoria"},{id:"V-6",boat:"Sail La Vie"},
   {id:"W-1",boat:""},{id:"W-2",boat:""},{id:"W-3",boat:"Blue Star"},{id:"W-4",boat:"Summer Wind"},{id:"W-5",boat:"Helen Rita"},{id:"W-6",boat:"Vincere"},
   {id:"X-1",boat:""},{id:"X-2",boat:"Irish Rover"},{id:"X-3",boat:"Elixir"},{id:"X-4",boat:"Sole Mate"},{id:"X-5",boat:"Voyager"},{id:"X-6",boat:"Moonshot"},
   {id:"Y-1",boat:""},{id:"Y-2",boat:"Anam Caras"},{id:"Y-3",boat:"Simpatico"},{id:"Y-4",boat:"Rubicon"},{id:"Y-5",boat:"Arete"},{id:"Y-6",boat:"Draco"},
   {id:"Z-1",boat:"Sunrise"},{id:"Z-2",boat:""},{id:"Z-3",boat:"Ocean Rebel"},{id:"Z-4",boat:"Honey Badger"},{id:"Z-5",boat:"Sea Suite"},
-  {id:"ZZ-1",boat:"Pau Hana"},{id:"ZZ-2",boat:"Emily"},{id:"ZZ-3",boat:"Ipanema"},{id:"ZZ-4",boat:"Assarain IV"},{id:"ZZ-5",boat:"Keburmain"}
+  {id:"ZZ-1",boat:"Pau Hana"},{id:"ZZ-2",boat:"Emily"},{id:"ZZ-3",boat:"Ipanema"},{id:"ZZ-4",boat:"Assarain IV"},{id:"ZZ-5",boat:"Keburmain"},
+  {id:"RF-1",boat:"Maple Sugar"},{id:"RF-2",boat:""},{id:"RF-3",boat:""},{id:"RF-4",boat:""},{id:"RF-5",boat:""},{id:"RF-6",boat:""},
+  {id:"RF-7",boat:""},{id:"RF-8",boat:""},{id:"RF-9",boat:""},{id:"RF-10",boat:""},{id:"RF-11",boat:""},{id:"RF-12",boat:""},{id:"RF-13",boat:""},
+  {id:"AA-1",boat:""},{id:"AA-2",boat:""},{id:"AA-3",boat:""},{id:"AA-4",boat:""},{id:"AA-5",boat:""},{id:"AA-6",boat:""},
+  {id:"AA-7",boat:""},{id:"AA-8",boat:""},{id:"AA-9",boat:""},{id:"AA-10",boat:"Sea Fever"},{id:"AA-11",boat:"Morning Star"},{id:"AA-12",boat:""},
+  {id:"Anchorage",boat:"Transient"}
 ];
 
 let selectedMooring = null;
